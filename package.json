@@ -1,0 +1,17 @@
+{
+  "name": "natlang-sql",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun --env-file=.env ./index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.36.2"
+  }
+}
