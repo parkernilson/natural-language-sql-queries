@@ -1,5 +1,7 @@
 # natlang-sql
+This is an AI commandline tool to answer natural language questions about a sqlite database.
 
+## Usage
 To install dependencies:
 
 ```bash
@@ -9,7 +11,8 @@ bun install
 To run:
 
 ```bash
-bun run index.ts
+bun start
 ```
 
-This project was created using `bun init` in bun v1.1.43. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+## Database Schema
+![Database Schema](./ERD.png)
