@@ -18,6 +18,6 @@ bun start
 ![Database Schema](./ERD.png)
 
 ## Examples
-![Example Prompt 1](./examples/ExamplePrompt1.png)
-![Example Answer 1](./examples/ExampleAnswer1.png)
-For more examples, see: [Example Conversation 1](./examples/example_conversation_1.txt)
+![Example Prompt 2](./examples/ExamplePrompt2.png)
+![Example Answer 2](./examples/ExampleAnswer2.png)
+For more examples, see: [Example Conversation 2](./examples/example_conversation_2.txt)

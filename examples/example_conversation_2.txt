@@ -1,0 +1,584 @@
+(base) parkernilson@ParkersMBP2023 natlang-sql % bun start 
+$ bun --env-file=.env ./src/index.ts --verbose
+Welcome to NatLang SQL!
+Type prompt> How many users are there in the database?
+
+create table users (
+id integer primary key autoincrement,
+first_name text not null,
+last_name text not null,
+email text not null
+);
+/*
+3 example rows :
+select * from users limit 3;
+id first_name last_name email
+1 John Doe johndoe@gmail.com
+2 Guy Montgommery guy234@hotmail.net
+3 Brody Jameson secretman918@mail.com
+*/
+
+create table goals (
+id integer primary key autoincrement,
+created_at datetime not null,
+title text not null,
+owner text not null,
+foreign key (owner) references users(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from goals limit 3;
+id created_at title owner
+1 2022-01-01 12:23:52 'Lose 10 pounds' 1
+2 2022-01-02 20:18:12 'Learn to play guitar' 2
+3 2022-01-03 03:51:37 'Write a novel' 3
+*/
+
+create table entries (
+id integer primary key autoincrement,
+created_at datetime not null,
+goal_id integer not null,
+text_content text,
+goal_completed boolean,
+foreign key (goal_id) references goals(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from entries limit 3;
+id created_at goal_id text_content goal_completed
+1 2022-01-02 14:23:52 1 'Lost 2 pounds this week!' true
+2 2022-01-03 08:18:12 2 'Learned to play G chord' true
+3 2022-01-04 19:51:37 3 'Didn't have time to write today' false
+*/
+
+create table share_records (
+created_at datetime not null,
+goal_id integer not null,
+shared_with integer not null,
+accepted boolean not null,
+primary key (goal_id, shared_with),
+foreign key (goal_id) references goals(id)
+on delete cascade,
+foreign key (shared_with) references users(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from share_records limit 3;
+created_at goal_id shared_with accepted
+2022-01-02 14:23:52 1 2 true
+2022-01-03 08:18:12 2 3 true
+2022-01-04 19:51:37 3 1 false
+*/
+
+-- Using valid SQLite , answer the following
+questions for the tables provided above . Include nothing in the answer but a single valid sql query and no comments .
+
+Question: What is Kyle Davis' email address?
+select email from users where first_name = 'Kyle' and last_name = 'Davis';
+Question: Return the first name of each user that has accepted an invitation from user with id 1.
+select u.first_name from users as u join share_records as sr on u.id = sr.shared_with where sr.accepted = 1 join goals as g on sr.goal_id = g.id where g.owner = 1;
+Question: Show the title of every goal that was created after Feb 1, 2022.
+select title from goals where created_at > '2022-02-01';
+Question: How many users are there in the database?
+
+Using the above prompt to generate SQL...
+Generated SQL:
+select count(*) from users;
+Continue? (y/n)  y
+Result:
+{
+  "count(*)": 11,
+}
+Continue? (y/n)  y
+Answer:
+There are 11 users in the database.
+Type prompt> What is the most common letter in the first names of the users?
+
+create table users (
+id integer primary key autoincrement,
+first_name text not null,
+last_name text not null,
+email text not null
+);
+/*
+3 example rows :
+select * from users limit 3;
+id first_name last_name email
+1 John Doe johndoe@gmail.com
+2 Guy Montgommery guy234@hotmail.net
+3 Brody Jameson secretman918@mail.com
+*/
+
+create table goals (
+id integer primary key autoincrement,
+created_at datetime not null,
+title text not null,
+owner text not null,
+foreign key (owner) references users(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from goals limit 3;
+id created_at title owner
+1 2022-01-01 12:23:52 'Lose 10 pounds' 1
+2 2022-01-02 20:18:12 'Learn to play guitar' 2
+3 2022-01-03 03:51:37 'Write a novel' 3
+*/
+
+create table entries (
+id integer primary key autoincrement,
+created_at datetime not null,
+goal_id integer not null,
+text_content text,
+goal_completed boolean,
+foreign key (goal_id) references goals(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from entries limit 3;
+id created_at goal_id text_content goal_completed
+1 2022-01-02 14:23:52 1 'Lost 2 pounds this week!' true
+2 2022-01-03 08:18:12 2 'Learned to play G chord' true
+3 2022-01-04 19:51:37 3 'Didn't have time to write today' false
+*/
+
+create table share_records (
+created_at datetime not null,
+goal_id integer not null,
+shared_with integer not null,
+accepted boolean not null,
+primary key (goal_id, shared_with),
+foreign key (goal_id) references goals(id)
+on delete cascade,
+foreign key (shared_with) references users(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from share_records limit 3;
+created_at goal_id shared_with accepted
+2022-01-02 14:23:52 1 2 true
+2022-01-03 08:18:12 2 3 true
+2022-01-04 19:51:37 3 1 false
+*/
+
+-- Using valid SQLite , answer the following
+questions for the tables provided above . Include nothing in the answer but a single valid sql query and no comments .
+
+Question: What is Kyle Davis' email address?
+select email from users where first_name = 'Kyle' and last_name = 'Davis';
+Question: Return the first name of each user that has accepted an invitation from user with id 1.
+select u.first_name from users as u join share_records as sr on u.id = sr.shared_with where sr.accepted = 1 join goals as g on sr.goal_id = g.id where g.owner = 1;
+Question: Show the title of every goal that was created after Feb 1, 2022.
+select title from goals where created_at > '2022-02-01';
+Question: What is the most common letter in the first names of the users?
+
+Using the above prompt to generate SQL...
+Generated SQL:
+select substr(lower(first_name), 1, 1) as letter, count(*) as frequency from users group by letter order by frequency desc limit 1;
+Continue? (y/n)  y
+Result:
+{
+  letter: "j",
+  frequency: 2,
+}
+Continue? (y/n)  y
+Answer:
+The most common letter in users' first names is "j", appearing 2 times.
+Type prompt> How many goals have been shared in the database?
+
+create table users (
+id integer primary key autoincrement,
+first_name text not null,
+last_name text not null,
+email text not null
+);
+/*
+3 example rows :
+select * from users limit 3;
+id first_name last_name email
+1 John Doe johndoe@gmail.com
+2 Guy Montgommery guy234@hotmail.net
+3 Brody Jameson secretman918@mail.com
+*/
+
+create table goals (
+id integer primary key autoincrement,
+created_at datetime not null,
+title text not null,
+owner text not null,
+foreign key (owner) references users(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from goals limit 3;
+id created_at title owner
+1 2022-01-01 12:23:52 'Lose 10 pounds' 1
+2 2022-01-02 20:18:12 'Learn to play guitar' 2
+3 2022-01-03 03:51:37 'Write a novel' 3
+*/
+
+create table entries (
+id integer primary key autoincrement,
+created_at datetime not null,
+goal_id integer not null,
+text_content text,
+goal_completed boolean,
+foreign key (goal_id) references goals(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from entries limit 3;
+id created_at goal_id text_content goal_completed
+1 2022-01-02 14:23:52 1 'Lost 2 pounds this week!' true
+2 2022-01-03 08:18:12 2 'Learned to play G chord' true
+3 2022-01-04 19:51:37 3 'Didn't have time to write today' false
+*/
+
+create table share_records (
+created_at datetime not null,
+goal_id integer not null,
+shared_with integer not null,
+accepted boolean not null,
+primary key (goal_id, shared_with),
+foreign key (goal_id) references goals(id)
+on delete cascade,
+foreign key (shared_with) references users(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from share_records limit 3;
+created_at goal_id shared_with accepted
+2022-01-02 14:23:52 1 2 true
+2022-01-03 08:18:12 2 3 true
+2022-01-04 19:51:37 3 1 false
+*/
+
+-- Using valid SQLite , answer the following
+questions for the tables provided above . Include nothing in the answer but a single valid sql query and no comments .
+
+Question: What is Kyle Davis' email address?
+select email from users where first_name = 'Kyle' and last_name = 'Davis';
+Question: Return the first name of each user that has accepted an invitation from user with id 1.
+select u.first_name from users as u join share_records as sr on u.id = sr.shared_with where sr.accepted = 1 join goals as g on sr.goal_id = g.id where g.owner = 1;
+Question: Show the title of every goal that was created after Feb 1, 2022.
+select title from goals where created_at > '2022-02-01';
+Question: How many goals have been shared in the database?
+
+Using the above prompt to generate SQL...
+Generated SQL:
+select count(*) from share_records;
+Continue? (y/n)  y
+Result:
+{
+  "count(*)": 14,
+}
+Continue? (y/n)  y
+Answer:
+The database contains 14 goals that have been shared.
+Type prompt> Who is the user that has shared the most goals?
+
+create table users (
+id integer primary key autoincrement,
+first_name text not null,
+last_name text not null,
+email text not null
+);
+/*
+3 example rows :
+select * from users limit 3;
+id first_name last_name email
+1 John Doe johndoe@gmail.com
+2 Guy Montgommery guy234@hotmail.net
+3 Brody Jameson secretman918@mail.com
+*/
+
+create table goals (
+id integer primary key autoincrement,
+created_at datetime not null,
+title text not null,
+owner text not null,
+foreign key (owner) references users(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from goals limit 3;
+id created_at title owner
+1 2022-01-01 12:23:52 'Lose 10 pounds' 1
+2 2022-01-02 20:18:12 'Learn to play guitar' 2
+3 2022-01-03 03:51:37 'Write a novel' 3
+*/
+
+create table entries (
+id integer primary key autoincrement,
+created_at datetime not null,
+goal_id integer not null,
+text_content text,
+goal_completed boolean,
+foreign key (goal_id) references goals(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from entries limit 3;
+id created_at goal_id text_content goal_completed
+1 2022-01-02 14:23:52 1 'Lost 2 pounds this week!' true
+2 2022-01-03 08:18:12 2 'Learned to play G chord' true
+3 2022-01-04 19:51:37 3 'Didn't have time to write today' false
+*/
+
+create table share_records (
+created_at datetime not null,
+goal_id integer not null,
+shared_with integer not null,
+accepted boolean not null,
+primary key (goal_id, shared_with),
+foreign key (goal_id) references goals(id)
+on delete cascade,
+foreign key (shared_with) references users(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from share_records limit 3;
+created_at goal_id shared_with accepted
+2022-01-02 14:23:52 1 2 true
+2022-01-03 08:18:12 2 3 true
+2022-01-04 19:51:37 3 1 false
+*/
+
+-- Using valid SQLite , answer the following
+questions for the tables provided above . Include nothing in the answer but a single valid sql query and no comments .
+
+Question: What is Kyle Davis' email address?
+select email from users where first_name = 'Kyle' and last_name = 'Davis';
+Question: Return the first name of each user that has accepted an invitation from user with id 1.
+select u.first_name from users as u join share_records as sr on u.id = sr.shared_with where sr.accepted = 1 join goals as g on sr.goal_id = g.id where g.owner = 1;
+Question: Show the title of every goal that was created after Feb 1, 2022.
+select title from goals where created_at > '2022-02-01';
+Question: Who is the user that has shared the most goals?
+
+Using the above prompt to generate SQL...
+Generated SQL:
+select u.first_name, u.last_name, count(*) as share_count 
+from users u 
+join goals g on u.id = g.owner 
+join share_records sr on g.id = sr.goal_id 
+group by u.id, u.first_name, u.last_name 
+order by share_count desc 
+limit 1;
+Continue? (y/n)  y
+Result:
+{
+  first_name: "Hank",
+  last_name: "Anderson",
+  share_count: 6,
+}
+Continue? (y/n)  y
+Answer:
+According to the data, Hank Anderson has shared the most goals, with a total of 6 goals shared with other users.
+Type prompt> What is the email of the user with the shortest first name?
+
+create table users (
+id integer primary key autoincrement,
+first_name text not null,
+last_name text not null,
+email text not null
+);
+/*
+3 example rows :
+select * from users limit 3;
+id first_name last_name email
+1 John Doe johndoe@gmail.com
+2 Guy Montgommery guy234@hotmail.net
+3 Brody Jameson secretman918@mail.com
+*/
+
+create table goals (
+id integer primary key autoincrement,
+created_at datetime not null,
+title text not null,
+owner text not null,
+foreign key (owner) references users(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from goals limit 3;
+id created_at title owner
+1 2022-01-01 12:23:52 'Lose 10 pounds' 1
+2 2022-01-02 20:18:12 'Learn to play guitar' 2
+3 2022-01-03 03:51:37 'Write a novel' 3
+*/
+
+create table entries (
+id integer primary key autoincrement,
+created_at datetime not null,
+goal_id integer not null,
+text_content text,
+goal_completed boolean,
+foreign key (goal_id) references goals(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from entries limit 3;
+id created_at goal_id text_content goal_completed
+1 2022-01-02 14:23:52 1 'Lost 2 pounds this week!' true
+2 2022-01-03 08:18:12 2 'Learned to play G chord' true
+3 2022-01-04 19:51:37 3 'Didn't have time to write today' false
+*/
+
+create table share_records (
+created_at datetime not null,
+goal_id integer not null,
+shared_with integer not null,
+accepted boolean not null,
+primary key (goal_id, shared_with),
+foreign key (goal_id) references goals(id)
+on delete cascade,
+foreign key (shared_with) references users(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from share_records limit 3;
+created_at goal_id shared_with accepted
+2022-01-02 14:23:52 1 2 true
+2022-01-03 08:18:12 2 3 true
+2022-01-04 19:51:37 3 1 false
+*/
+
+-- Using valid SQLite , answer the following
+questions for the tables provided above . Include nothing in the answer but a single valid sql query and no comments .
+
+Question: What is Kyle Davis' email address?
+select email from users where first_name = 'Kyle' and last_name = 'Davis';
+Question: Return the first name of each user that has accepted an invitation from user with id 1.
+select u.first_name from users as u join share_records as sr on u.id = sr.shared_with where sr.accepted = 1 join goals as g on sr.goal_id = g.id where g.owner = 1;
+Question: Show the title of every goal that was created after Feb 1, 2022.
+select title from goals where created_at > '2022-02-01';
+Question: What is the email of the user with the shortest first name?
+
+Using the above prompt to generate SQL...
+Generated SQL:
+select email from users where length(first_name) = (select min(length(first_name)) from users);
+Continue? (y/n)  y
+Result:
+{
+  email: "bob.brown@mail.com",
+}
+Continue? (y/n)  y
+Answer:
+This query returned a single email address: bob.brown@mail.com. This indicates that the user with the shortest first name in the database has this email address.
+Type prompt> Who is the user who has the most goals shared with them?
+
+create table users (
+id integer primary key autoincrement,
+first_name text not null,
+last_name text not null,
+email text not null
+);
+/*
+3 example rows :
+select * from users limit 3;
+id first_name last_name email
+1 John Doe johndoe@gmail.com
+2 Guy Montgommery guy234@hotmail.net
+3 Brody Jameson secretman918@mail.com
+*/
+
+create table goals (
+id integer primary key autoincrement,
+created_at datetime not null,
+title text not null,
+owner text not null,
+foreign key (owner) references users(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from goals limit 3;
+id created_at title owner
+1 2022-01-01 12:23:52 'Lose 10 pounds' 1
+2 2022-01-02 20:18:12 'Learn to play guitar' 2
+3 2022-01-03 03:51:37 'Write a novel' 3
+*/
+
+create table entries (
+id integer primary key autoincrement,
+created_at datetime not null,
+goal_id integer not null,
+text_content text,
+goal_completed boolean,
+foreign key (goal_id) references goals(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from entries limit 3;
+id created_at goal_id text_content goal_completed
+1 2022-01-02 14:23:52 1 'Lost 2 pounds this week!' true
+2 2022-01-03 08:18:12 2 'Learned to play G chord' true
+3 2022-01-04 19:51:37 3 'Didn't have time to write today' false
+*/
+
+create table share_records (
+created_at datetime not null,
+goal_id integer not null,
+shared_with integer not null,
+accepted boolean not null,
+primary key (goal_id, shared_with),
+foreign key (goal_id) references goals(id)
+on delete cascade,
+foreign key (shared_with) references users(id)
+on delete cascade
+);
+/*
+3 example rows :
+select * from share_records limit 3;
+created_at goal_id shared_with accepted
+2022-01-02 14:23:52 1 2 true
+2022-01-03 08:18:12 2 3 true
+2022-01-04 19:51:37 3 1 false
+*/
+
+-- Using valid SQLite , answer the following
+questions for the tables provided above . Include nothing in the answer but a single valid sql query and no comments .
+
+Question: What is Kyle Davis' email address?
+select email from users where first_name = 'Kyle' and last_name = 'Davis';
+Question: Return the first name of each user that has accepted an invitation from user with id 1.
+select u.first_name from users as u join share_records as sr on u.id = sr.shared_with where sr.accepted = 1 join goals as g on sr.goal_id = g.id where g.owner = 1;
+Question: Show the title of every goal that was created after Feb 1, 2022.
+select title from goals where created_at > '2022-02-01';
+Question: Who is the user who has the most goals shared with them?
+
+Using the above prompt to generate SQL...
+Generated SQL:
+select u.first_name, u.last_name, count(*) as share_count 
+from users u 
+join share_records sr on u.id = sr.shared_with 
+group by u.id, u.first_name, u.last_name 
+order by share_count desc 
+limit 1;
+Continue? (y/n)  y
+Result:
+{
+  first_name: "John",
+  last_name: "Doe",
+  share_count: 3,
+}
+Continue? (y/n)  y
+Answer:
+This result shows that John Doe has the highest number of goals shared with them, with a total of 3 shared goals.
+Type prompt>   
