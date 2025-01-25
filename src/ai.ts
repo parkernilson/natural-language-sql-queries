@@ -1,10 +1,8 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { buildPrompt } from "./prompt"
 
 const anthropic = new Anthropic();
 
-
-export const getSql = async (prompt: string): Promise<string> => {
+export const getAnswer = async (prompt: string): Promise<string> => {
     const msg = await anthropic.messages.create({
         model: "claude-3-5-sonnet-20241022",
         max_tokens: 1024,

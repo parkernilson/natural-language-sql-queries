@@ -99,6 +99,14 @@ ${directions}
 
 ${nlq_sql_pairs}`
 
-export const buildPrompt = (prompt: string): string => {
+export const buildSQLPrompt = (prompt: string): string => {
     return `${promptHeader}\nQuestion: ${prompt}`;
+}
+
+export const buildExplainResultsPrompt = (prompt: string, answer: string): string => {
+    return `Given the following prompt:
+${prompt}
+
+Translate the following JSON result into a human-readable explanation (without referencing the prompt or the answer):
+${answer}`
 }
